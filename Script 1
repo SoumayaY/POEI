@@ -1,0 +1,26 @@
+## Script de démarrage de service ##
+
+$i=0
+$service = read-host "Veuillez saisir le nom du service:"
+$tab = Get-service | Where-Object {$_.Name -match "$service"}
+write-host "`nVoici les services trouvés:`n"
+while($i -lt $tab.Length)
+{$j=$i+1
+write-host  [$j]  $tab[$i] "`n status:" $tab[$i].Status
+$i++
+}
+
+[int]$choix = read-host "`nVeuillez saisir le numéro du service:"
+$chf=$choix-1
+
+switch ($tab[$chf].status)
+{
+stopped { $reponse1=read-host "`nLe service est stoppé, voulez-vous le démarrer ? [oui/non]"
+          if ($reponse1 -eq 'oui') {Start-Service $tab[$chf].name   
+                                    write-host "`nLe service a été démarré."}
+        }
+running { $reponse2=read-host "`nLe service est démarré, voulez-vous le stopper ? [oui/non]"
+          if ($reponse2 -eq 'oui') {Stop-Service $tab[$chf].name  
+                                    write-host "`nLe service a été stoppé."}
+        } 
+}
